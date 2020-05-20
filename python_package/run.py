@@ -17,7 +17,7 @@ def main(task):
     try:
         logger.debug(f"Task {task} started")
         tasks[task]()
-    except:
+    except:  # noqa
         logger.error(f"Task {task} failed")
         raise
 

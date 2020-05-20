@@ -10,4 +10,3 @@ def save_pickle(obj: object, file_name: str) -> None:
     """
     with open(file_name, 'ab') as file:
         pickle.dump(obj, file)
-

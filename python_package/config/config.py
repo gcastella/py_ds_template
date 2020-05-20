@@ -15,7 +15,11 @@ def box_yaml(file: str) -> Box:
         boxed yaml file.
     """
     with open(file, "r") as yml_file:
-        cfg = Box(yaml.safe_load(yml_file), default_box=True, default_box_attr=None)
+        cfg = Box(
+            yaml.safe_load(yml_file),
+            default_box=True,
+            default_box_attr=None
+        )
     return cfg
 
 
@@ -32,7 +36,11 @@ LOG_FILE = os.getenv("LOG_FILE")
 # Build config object.
 full_config = box_yaml(CONFIG_FILE)
 run_config = box_yaml(RUN_FILE)
-config = Box({**full_config["base"], **full_config[ENV], **run_config}, default_box=True, default_box_attr=None)
+config = Box({
+    **full_config["base"],
+    **full_config[ENV],
+    **run_config
+    }, default_box=True, default_box_attr=None)
 config.environment = ENV
 config.config_file = CONFIG_FILE
 config.run_file = RUN_FILE

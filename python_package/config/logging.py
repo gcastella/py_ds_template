@@ -11,4 +11,6 @@ def load_logging(yaml_file=config.log_file, logs_dir=config.path.logs):
             log_config = yaml.safe_load(file)
         logging.config.dictConfig(log_config)
     else:
-        raise FileNotFoundError(f"Log yaml configuration file not found in {yaml_file}")
+        raise FileNotFoundError(
+            f"Log yaml configuration file not found in {yaml_file}"
+        )
