@@ -54,4 +54,3 @@ class TestUtils(unittest.TestCase):
             get_from_module(module="pandas", attribute="read_csv"),
             pandas.read_csv
         )
-
