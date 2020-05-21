@@ -1,8 +1,9 @@
 import logging
+
 import click
-from python_package.tasks.sample_tasks import hello_world, get_config
+
 from python_package.config import load_logging, config
-import pprint
+from python_package.tasks.sample_tasks import hello_world, get_config
 
 logger = logging.getLogger(__name__)
 

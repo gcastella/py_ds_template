@@ -1,8 +1,9 @@
-import git
-import os
 import importlib
+import os
 from datetime import date
 from datetime import datetime
+
+import git
 
 
 def get_git_hash() -> str:

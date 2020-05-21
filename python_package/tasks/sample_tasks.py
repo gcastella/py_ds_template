@@ -1,6 +1,7 @@
 import logging
-from python_package.config import config
 import pprint
+
+from python_package.config import config
 
 logger = logging.getLogger(__name__)
 pp = pprint.PrettyPrinter(indent=4)

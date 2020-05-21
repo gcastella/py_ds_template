@@ -1,4 +1,5 @@
 import os
+
 import yaml
 from box import Box
 from dotenv import load_dotenv
@@ -32,7 +33,6 @@ CONFIG_FILE = os.getenv("CONFIG_FILE")
 RUN_FILE = os.getenv("RUN_FILE")
 LOG_FILE = os.getenv("LOG_FILE")
 
-
 # Build config object.
 full_config = box_yaml(CONFIG_FILE)
 run_config = box_yaml(RUN_FILE)
@@ -40,7 +40,7 @@ config = Box({
     **full_config["base"],
     **full_config[ENV],
     **run_config
-    }, default_box=True, default_box_attr=None)
+}, default_box=True, default_box_attr=None)
 config.environment = ENV
 config.config_file = CONFIG_FILE
 config.run_file = RUN_FILE

@@ -1,6 +1,8 @@
 import logging.config
 import os
+
 import yaml
+
 from python_package.config import config
 
 
