@@ -1,0 +1,42 @@
+etl:
+  extract:
+    table_name: "DB.SCH.TBL"
+  transform:
+    file_name: "processed_data.parquet"
+  load:
+    load_module: "pandas"
+    load_name: "read_parquet"
+    load_params:
+      columns: ["label", "feature1", "feature2"]
+
+
+train:
+  col_label: "label"
+  cols_to_ignore: ["userid", "date"]
+
+  sampler_module: "imblearn.combine"
+  sampler_name: "SMOTEENN"
+  sampler_params:
+    random_state: 42
+    n_jobs: -1
+
+  classifier_module: "sklearn.ensemble"
+  classifier_name: "RandomForestClassifier"
+  classifier_params:
+    n_estimators: 1000
+    max_depth: 5
+    random_state: 42
+    n_jobs: -1
+
+  file: "model_data/03_train/model.pkl"
+
+test:
+  model_file: "model.pkl"
+  test_data: "model_data/03_train/test.parquet"
+  metric_module: "sklearn.metrics"
+  metric_name: "f1_score"
+
+predict:
+  data: "model_data/01_source/predict_data.csv"
+  model_file: "model.pkl"
+
