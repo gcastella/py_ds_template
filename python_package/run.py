@@ -4,6 +4,7 @@ import click
 
 from python_package.config import load_logging, config
 from python_package.tasks.sample_tasks import hello_world, get_config
+from python_package.tasks.preprocess import PreProcessTask
 
 logger = logging.getLogger(__name__)
 
@@ -11,6 +12,7 @@ logger = logging.getLogger(__name__)
 tasks = {
     "sample_task": hello_world,
     "get_config": get_config,
+    "pre_process": PreProcessTask().run,
 }
 
 
