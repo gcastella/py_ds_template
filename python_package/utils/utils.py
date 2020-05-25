@@ -2,6 +2,7 @@ import importlib
 import os
 from datetime import date
 from datetime import datetime
+import pandas as pd
 
 import git
 
@@ -35,7 +36,8 @@ def get_time_str(time_in: datetime = datetime.now()) -> str:
 
 def add_version(file: str,
                 version: str = get_git_hash(),
-                end: bool = True) -> str:
+                end: bool = True,
+                **kwargs) -> str:
     """
     Add version to a file. Useful for creating file names
      containing git hexsha or times.
@@ -54,8 +56,43 @@ def add_version(file: str,
     return versioned_file
 
 
-def get_from_module(module: str, attribute: str) -> object:
+def get_from_module(module: str, name: str, **kwargs) -> object:
     """
     Get attribute or function from a module.
     """
-    return getattr(importlib.import_module(module), attribute)
+    attributes = name.split(".")
+    curr_name = attributes.pop(0)
+    mod = [getattr(importlib.import_module(module), curr_name)]
+    while len(attributes) > 0:
+        curr_name = attributes.pop(0)
+        mod.append(getattr(mod[-1], curr_name))
+    return mod[-1]
+
+
+def do_call(module: str, name: str, params=None, **kwargs) -> object:
+    """
+    Call a function with parameters.
+    """
+    if params is None:
+        params = {}
+    func = get_from_module(module=module, name=name)
+    return func(**params)
+
+
+def is_number(s: str):
+    """
+    Checks if a string is a float.
+    """
+    try:
+        float(s)
+        return True
+    except ValueError:
+        return False
+
+
+def print_row(df: pd.Series):
+    """
+    Print every value in a pd.Series.
+    """
+    for value, index in zip(df, df.index):
+        print(index, ": \n", value)
