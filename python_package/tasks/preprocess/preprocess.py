@@ -26,7 +26,9 @@ class PreProcessTask:
         )
 
         # Logging
-        logger.info(f"Initiated PreProcessTask run with version {self.version}.")
+        logger.info(
+            f"Initiated PreProcessTask run with version {self.version}."
+        )
 
     def run(self):
         data = self.load()
