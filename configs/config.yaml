@@ -1,16 +1,16 @@
 base:
-  path:
-    logs: "logs"
-    scripts: "scripts"
-    notebooks: "notebooks"
-    docs: "docs"
-    configs: "configs"
+    path:
+        logs: "logs"
+        scripts: "scripts"
+        notebooks: "notebooks"
+        docs: "docs"
+        configs: "configs"
 
 dev:
-  db: "sqlite:////some_dir/dev.db"
+    db: "sqlite:////some_dir/dev.db"
 
 pre:
-  db: "sqlite:////some_other_dir/prod.db"
+    db: "sqlite:////some_other_dir/prod.db"
 
 prod:
-  db: "sqlite:////some_other_dir/prod.db"
+    db: "sqlite:////some_other_dir/prod.db"
