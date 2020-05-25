@@ -4,6 +4,8 @@ import yaml
 from box import Box
 from dotenv import load_dotenv
 
+from python_package.utils import get_from_module
+
 
 def box_yaml(file: str) -> Box:
     """
@@ -45,3 +47,9 @@ config.environment = ENV
 config.config_file = CONFIG_FILE
 config.run_file = RUN_FILE
 config.log_file = LOG_FILE
+
+# Version
+if config.run.use_existing_run:
+    config.run.version = config.run.use_existing_run
+else:
+    config.run.version = get_from_module(**config.run.versioning)()
