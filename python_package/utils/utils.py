@@ -3,6 +3,7 @@ import os
 from datetime import date
 from datetime import datetime
 import pandas as pd
+from pathlib import Path
 
 import git
 
@@ -35,7 +36,8 @@ def get_time_str(time_in: datetime = datetime.now()) -> str:
 
 
 def add_version(file: str,
-                version: str = get_git_hash(),
+                path: str = "",
+                version: str = get_time_str(),
                 end: bool = True,
                 **kwargs) -> str:
     """
@@ -44,16 +46,19 @@ def add_version(file: str,
 
     Args:
         file: file to version.
+        path: path of the file.
         version: string version to add.
         end: if version should be appended at the end.
          Otherwise it's appended at the beginning.
     """
     file_name, file_extension = os.path.splitext(file)
     if end:
-        versioned_file = f"{file_name}_{version}{file_extension}"
+        versioned_file = \
+            Path(path) / f"{file_name}_{version}{file_extension}"
     else:
-        versioned_file = f"{version}_{file_name}{file_extension}"
-    return versioned_file
+        versioned_file = \
+            Path(path) / f"{version}_{file_name}{file_extension}"
+    return str(versioned_file)
 
 
 def get_from_module(module: str, name: str, **kwargs) -> object:
