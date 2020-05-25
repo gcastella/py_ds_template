@@ -16,6 +16,11 @@ run:
 task:
 
     extract:
+        writer:
+            module: "pandas"
+            name: "DataFrame.to_csv"
+            params:
+                index: False
         output: &extract_output "iris.csv"
 
     preprocess:
