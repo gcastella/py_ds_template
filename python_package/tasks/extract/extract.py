@@ -2,7 +2,7 @@ from python_package.config import config
 from python_package.utils import add_version, get_from_module
 
 from pathlib import Path
-from pandas import pd
+import pandas as pd
 import logging
 from sklearn.datasets import load_iris
 
