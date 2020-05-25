@@ -2,11 +2,11 @@ run:
     use_existing_run: "20200522_202539"  # Either False or the version string of the run to use.
 
     paths:
-        source: "model_data/01_source"
-        preprocess: "model_data/02_preprocess"
-        train: "model_data/03_train"
-        test: "model_data/04_test"
-        predict: "model_data/05_predict"
+        extract: &extract "model_data/01_source"
+        preprocess: &preprocess "model_data/02_preprocess"
+        train: &train "model_data/03_train"
+        test: &test "model_data/04_test"
+        predict: &predict "model_data/05_predict"
 
     versioning:  # Ignored if use_existing_run is not False.
         module: "python_package.utils"
@@ -21,10 +21,14 @@ task:
             name: "DataFrame.to_csv"
             params:
                 index: False
-        output: &extract_output "iris.csv"
+        output:
+            path: *extract
+            file: &extract_output "iris.csv"
 
     preprocess:
-        input: *extract_output
+        input:
+            path: *extract
+            file: *extract_output
         loader:
             module: "pandas"
             name: "read_csv"
@@ -35,12 +39,16 @@ task:
             name: "DataFrame.to_parquet"
             params:
                 index: False
-        output: &preprocess_output "pp_iris.parquet"
+        output:
+            path: *preprocess
+            file: &preprocess_output "pp_iris.parquet"
 
     train:
         target_col: "species"
         cols_to_ignore: ["sepal_width"]
-        input: *preprocess_output
+        input:
+            path: *preprocess
+            file: *preprocess_output
         loader:
             module: "pandas"
             name: "read_parquet"
@@ -56,7 +64,9 @@ task:
             params:
                 test_size: 0.33
                 random_state: 42
-            output: &split_output "train_test.pkl"
+            output:
+                path: *train
+                file: &split_output "train_test.pkl"
         model:
             module: "sklearn.ensemble"
             name: "RandomForestClassifier"
@@ -65,11 +75,17 @@ task:
                 max_depth: 5
                 random_state: 42
                 n_jobs: -1
-            output: &model_output "model.pkl"
+            output:
+                path: *train
+                file: &model_output "model.pkl"
 
     test:
-        input_model: *model_output
-        input_split: *split_output
+        input_model:
+            path: *train
+            file: *model_output
+        input_split:
+            path: *train
+            file: *split_output
         loader:
             module: "pandas"
             name: "read_pickle"
@@ -87,9 +103,17 @@ task:
             accuracy:
                 module: "sklearn.metrics"
                 name: "accuracy_score"
-        output: "test.csv"
+        output:
+            path: *test
+            file: "test.csv"
 
     predict:
-        predict_data: "predict_sample.csv"
-        model: *model_output
-        output: &predict_output "predict.csv"
+        predict_data:
+            path: *extract
+            file: "predict_sample.csv"
+        model:
+            path: *train
+            file: *model_output
+        output:
+            path: *predict
+            file: &predict_output "predict.csv"
