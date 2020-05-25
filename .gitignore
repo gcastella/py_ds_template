@@ -122,9 +122,5 @@ ipython_config.py
 
 ### Other
 .idea
-logs/debug.log
-logs/info.log
-logs
-logs/*
-*.log
 model_data
+logs
