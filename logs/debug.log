@@ -154,3 +154,28 @@
 2020-05-19 18:28:51,412 - python_package.run - INFO - Loaded run config from configs/run.yaml
 2020-05-19 18:28:51,413 - python_package.run - DEBUG - Task get_config started
 2020-05-19 18:28:51,414 - python_package.tasks.sample_tasks - INFO - Config file used was configs/config.yaml
+2020-05-25 15:24:02,735 - python_package.run - INFO - Loaded general config from configs/config.yaml
+2020-05-25 15:24:02,788 - python_package.run - INFO - Loaded logging config from configs/logging.yaml
+2020-05-25 15:24:02,788 - python_package.run - INFO - Loaded run config from configs/run.yaml
+2020-05-25 15:24:02,789 - python_package.run - DEBUG - Task pre_process started
+2020-05-25 15:24:02,791 - python_package.tasks.preprocess.preprocess - INFO - Loaded data from model_data\01_source\20200522_202539_iris.csv.
+2020-05-25 15:24:02,792 - python_package.tasks.preprocess.preprocess - DEBUG -    sepal_length  sepal_width  petal_length  petal_width species
+0           5.1          3.5           1.4          0.2  setosa
+1           4.9          3.0           1.4          0.2  setosa
+2           4.7          3.2           1.3          0.2  setosa
+3           4.6          3.1           1.5          0.2  setosa
+4           5.0          3.6           1.4          0.2  setosa
+2020-05-25 15:24:02,832 - python_package.tasks.preprocess.preprocess - INFO - Added first PCA component.
+2020-05-25 15:24:02,833 - python_package.tasks.preprocess.preprocess - DEBUG -    sepal_length  sepal_width  petal_length  petal_width species  pca_comp1
+0           5.1          3.5           1.4          0.2  setosa  -2.684207
+1           4.9          3.0           1.4          0.2  setosa  -2.715391
+2           4.7          3.2           1.3          0.2  setosa  -2.889820
+3           4.6          3.1           1.5          0.2  setosa  -2.746437
+4           5.0          3.6           1.4          0.2  setosa  -2.728593
+2020-05-25 15:24:02,899 - python_package.tasks.preprocess.preprocess - DEBUG -    sepal_length  sepal_width  petal_length  petal_width species  pca_comp1
+0           5.1          3.5           1.4          0.2  setosa  -2.684207
+1           4.9          3.0           1.4          0.2  setosa  -2.715391
+2           4.7          3.2           1.3          0.2  setosa  -2.889820
+3           4.6          3.1           1.5          0.2  setosa  -2.746437
+4           5.0          3.6           1.4          0.2  setosa  -2.728593
+2020-05-25 15:24:02,926 - python_package.tasks.preprocess.preprocess - INFO - Saved data in model_data\01_source\20200522_202539_iris.csv.

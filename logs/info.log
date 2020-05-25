@@ -100,3 +100,9 @@
 2020-05-19 18:28:51,412 - python_package.run - INFO - Loaded logging config from configs/logging.yaml
 2020-05-19 18:28:51,412 - python_package.run - INFO - Loaded run config from configs/run.yaml
 2020-05-19 18:28:51,414 - python_package.tasks.sample_tasks - INFO - Config file used was configs/config.yaml
+2020-05-25 15:24:02,735 - python_package.run - INFO - Loaded general config from configs/config.yaml
+2020-05-25 15:24:02,788 - python_package.run - INFO - Loaded logging config from configs/logging.yaml
+2020-05-25 15:24:02,788 - python_package.run - INFO - Loaded run config from configs/run.yaml
+2020-05-25 15:24:02,791 - python_package.tasks.preprocess.preprocess - INFO - Loaded data from model_data\01_source\20200522_202539_iris.csv.
+2020-05-25 15:24:02,832 - python_package.tasks.preprocess.preprocess - INFO - Added first PCA component.
+2020-05-25 15:24:02,926 - python_package.tasks.preprocess.preprocess - INFO - Saved data in model_data\01_source\20200522_202539_iris.csv.
