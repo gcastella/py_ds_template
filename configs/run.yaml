@@ -75,12 +75,12 @@ task:
             file: &model_output "model.pkl"
 
     test:
-        input_model:
-            path: *train
-            file: *model_output
         input_split:
             path: *train
             file: *split_output
+        input_model:
+            path: *train
+            file: *model_output
         loader:
             module: "pandas"
             name: "read_pickle"
@@ -95,9 +95,12 @@ task:
             f1:
                 module: "sklearn.metrics"
                 name: "f1_score"
+                params:
+                    average: "micro"
             accuracy:
                 module: "sklearn.metrics"
                 name: "accuracy_score"
+                params: {}
         output:
             path: *test
             file: "test.csv"
