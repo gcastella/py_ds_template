@@ -61,7 +61,7 @@ class TrainTask(BaseTask):
         }
 
         logger.debug(split_data.keys())
-        logger.info("The dataset was split into X_train, X_test, y_train and y_test.") # noqa
+        logger.info("The dataset was split into X_train, X_test, y_train and y_test.")  # noqa
         return split_data
 
     def train(self, X_train, X_test, y_train, y_test):
