@@ -74,14 +74,18 @@ def get_from_module(module: str, name: str, **kwargs) -> object:
     return mod[-1]
 
 
-def do_call(module: str, name: str, params=None, **kwargs) -> object:
+def func_def(module: str, name: str, params=None, **kwargs) -> object:
     """
-    Call a function with parameters.
+    Create a function call from function name and parameters.
     """
     if params is None:
         params = {}
     func = get_from_module(module=module, name=name)
-    return func(**params)
+
+    def custom_fun(*args, **kwargs):
+        return func(*args, **kwargs, **params)
+
+    return custom_fun
 
 
 def is_number(s: str):
