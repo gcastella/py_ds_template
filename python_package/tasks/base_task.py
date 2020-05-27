@@ -1,5 +1,6 @@
 import pandas as pd
 import logging
+import typing
 
 from python_package.config import config
 from python_package.utils import add_version, get_from_module
@@ -46,14 +47,14 @@ class BaseTask:
             f"Initiated {task_scope} task run with version {self.version}."
         )
 
-    def run(self):
+    def run(self) -> None:
         """
         Actually runs all the task, usually load, do something,
         write back results.
         """
         pass
 
-    def load(self, file: str) -> pd.DataFrame:
+    def load(self, file: str) -> typing.Any:
         """
         Load data from files to return a data frame
         """
@@ -62,7 +63,7 @@ class BaseTask:
         logger.info(f"Loaded data from {file}.")
         return data
 
-    def write(self, data: object, file: str) -> None:
+    def write(self, data: typing.Any, file: str) -> None:
         """
         Write data frame or model object.
         """
@@ -70,7 +71,7 @@ class BaseTask:
         writer(data, file, **self.writer.params)
         logger.info(f"Saved data in {file}.")
 
-    def get_scope(self):
+    def get_scope(self) -> str:
         """
         Get scope of a task
         """
