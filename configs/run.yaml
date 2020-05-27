@@ -45,7 +45,6 @@ task:
 
     train:
         target_col: "species"
-        cols_to_ignore: ["sepal_width"]
         input:
             path: *preprocess
             file: *preprocess_output
@@ -55,29 +54,25 @@ task:
             params: {}
         writer:
             module: "pandas"
-            name: "DataFrame.to_parquet"
-            params:
-                index: False
+            name: "DataFrame.to_pickle"
+            params: {}
         split:
             module: "sklearn.model_selection"
             name: "train_test_split"
             params:
                 test_size: 0.33
                 random_state: 42
-            output:
-                path: *train
-                file: &split_output "train_test.pkl"
         model:
-            module: "sklearn.ensemble"
-            name: "RandomForestClassifier"
+            module: "sklearn.dummy"
+            name: "DummyClassifier"
             params:
-                n_estimators: 1000
-                max_depth: 5
-                random_state: 42
-                n_jobs: -1
-            output:
-                path: *train
-                file: &model_output "model.pkl"
+                strategy: "most_frequent"
+        output_split:
+            path: *train
+            file: &split_output "train_test.pkl"
+        output_model:
+            path: *train
+            file: &model_output "model.pkl"
 
     test:
         input_model:
@@ -108,7 +103,7 @@ task:
             file: "test.csv"
 
     predict:
-        predict_data:
+        input:
             path: *extract
             file: "predict_sample.csv"
         model:
