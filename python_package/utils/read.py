@@ -1,7 +1,8 @@
 import pickle
+import typing
 
 
-def read_pickle(file_name: str) -> object:
+def read_pickle(file_name: str) -> typing.Any:
     """
     Read pickle file
     Args:

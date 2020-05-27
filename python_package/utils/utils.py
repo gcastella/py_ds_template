@@ -4,6 +4,7 @@ from datetime import date
 from datetime import datetime
 import pandas as pd
 from pathlib import Path
+import typing
 
 import git
 
@@ -61,7 +62,7 @@ def add_version(file: str,
     return str(versioned_file)
 
 
-def get_from_module(module: str, name: str, **kwargs) -> object:
+def get_from_module(module: str, name: str, **kwargs) -> typing.Callable:
     """
     Get attribute or function from a module.
     """
@@ -74,7 +75,7 @@ def get_from_module(module: str, name: str, **kwargs) -> object:
     return mod[-1]
 
 
-def func_def(module: str, name: str, params=None, **kwargs) -> object:
+def func_def(module: str, name: str, params=None, **kwargs) -> typing.Callable:
     """
     Create a function call from function name and parameters.
     """
