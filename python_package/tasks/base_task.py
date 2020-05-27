@@ -1,6 +1,5 @@
 import pandas as pd
 import logging
-from pathlib import Path
 
 from python_package.config import config
 from python_package.utils import add_version, get_from_module
@@ -19,8 +18,8 @@ class BaseTask:
         """
         # Reading relevant config
         self.scope = task_scope
-        self.paths = config.run.paths
         self.version = config.run.version
+        self.task_config = config.task[task_scope]
         self.loader = config.task[task_scope].loader
         self.writer = config.task[task_scope].writer
         if config.task[task_scope].input:
@@ -60,18 +59,16 @@ class BaseTask:
         """
         loader = get_from_module(self.loader.module, self.loader.name)
         data = loader(file, **self.loader.params)
-        logger.info(f"Loaded data from {self.input}.")
-        logger.debug(data.head(5))
+        logger.info(f"Loaded data from {file}.")
         return data
 
-    def write(self, data: pd.DataFrame, file: str) -> None:
+    def write(self, data: object, file: str) -> None:
         """
-        Write data frame object.
+        Write data frame or model object.
         """
         writer = get_from_module(self.writer.module, self.writer.name)
         writer(data, file, **self.writer.params)
-        logger.debug(data.head(5))
-        logger.info(f"Saved data in {self.input}.")
+        logger.info(f"Saved data in {file}.")
 
     def get_scope(self):
         """
