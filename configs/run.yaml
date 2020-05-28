@@ -1,42 +1,117 @@
-etl:
-  extract:
-    table_name: "DB.SCH.TBL"
-  transform:
-    file_name: "processed_data.parquet"
-  load:
-    load_module: "pandas"
-    load_name: "read_parquet"
-    load_params:
-      columns: ["label", "feature1", "feature2"]
+run:
+    use_existing_run: "20200522_202539"  # Either False or the version string of the run to use.
+
+    paths:
+        extract: &extract "model_data/01_source"
+        preprocess: &preprocess "model_data/02_preprocess"
+        train: &train "model_data/03_train"
+        test: &test "model_data/04_test"
+        predict: &predict "model_data/05_predict"
+
+    versioning:  # Ignored if use_existing_run is not False.
+        module: "python_package.utils"
+        name: "get_time_str"
 
 
-train:
-  col_label: "label"
-  cols_to_ignore: ["userid", "date"]
+task:
 
-  sampler_module: "imblearn.combine"
-  sampler_name: "SMOTEENN"
-  sampler_params:
-    random_state: 42
-    n_jobs: -1
+    extract:
+        writer:
+            module: "pandas"
+            name: "DataFrame.to_csv"
+            params:
+                index: False
+        output:
+            path: *extract
+            file: &extract_output "iris.csv"
 
-  classifier_module: "sklearn.ensemble"
-  classifier_name: "RandomForestClassifier"
-  classifier_params:
-    n_estimators: 1000
-    max_depth: 5
-    random_state: 42
-    n_jobs: -1
+    preprocess:
+        input:
+            path: *extract
+            file: *extract_output
+        loader:
+            module: "pandas"
+            name: "read_csv"
+            params:
+                sep: ","
+        writer:
+            module: "pandas"
+            name: "DataFrame.to_parquet"
+            params:
+                index: False
+        output:
+            path: *preprocess
+            file: &preprocess_output "pp_iris.parquet"
 
-  file: "model_data/03_train/model.pkl"
+    train:
+        target_col: "species"
+        input:
+            path: *preprocess
+            file: *preprocess_output
+        loader:
+            module: "pandas"
+            name: "read_parquet"
+            params: {}
+        writer:
+            module: "pandas"
+            name: "DataFrame.to_pickle"
+            params: {}
+        split:
+            module: "sklearn.model_selection"
+            name: "train_test_split"
+            params:
+                test_size: 0.33
+                random_state: 42
+        model:
+            module: "sklearn.dummy"
+            name: "DummyClassifier"
+            params:
+                strategy: "most_frequent"
+        output_split:
+            path: *train
+            file: &split_output "train_test.pkl"
+        output_model:
+            path: *train
+            file: &model_output "model.pkl"
 
-test:
-  model_file: "model.pkl"
-  test_data: "model_data/03_train/test.parquet"
-  metric_module: "sklearn.metrics"
-  metric_name: "f1_score"
+    test:
+        input_split:
+            path: *train
+            file: *split_output
+        input_model:
+            path: *train
+            file: *model_output
+        loader:
+            module: "pandas"
+            name: "read_pickle"
+            params: {}
+        writer:
+            module: "pandas"
+            name: "DataFrame.to_csv"
+            params:
+                sep: ","
+                index: False
+        metrics:
+            f1:
+                module: "sklearn.metrics"
+                name: "f1_score"
+                params:
+                    average: "micro"
+            accuracy:
+                module: "sklearn.metrics"
+                name: "accuracy_score"
+                params: {}
+        output:
+            path: *test
+            file: "test.csv"
 
-predict:
-  data: "model_data/01_source/predict_data.csv"
-  model_file: "model.pkl"
-
+    predict:
+        input:
+            path: *extract
+            file: "predict_sample.csv"
+        model:
+            path: *train
+            file: *model_output
+        output:
+            path: *predict
+            file: &predict_output "predict.csv"

@@ -1,8 +1,7 @@
-from datetime import date
-from datetime import datetime
-from python_package.utils import *
-import unittest
 import re
+import unittest
+
+from python_package.utils import *
 
 
 class TestUtils(unittest.TestCase):

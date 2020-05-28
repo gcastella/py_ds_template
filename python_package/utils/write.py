@@ -1,7 +1,8 @@
 import pickle
+import typing
 
 
-def save_pickle(obj: object, file_name: str) -> None:
+def save_pickle(obj: typing.Any, file_name: str) -> None:
     """
     Save object in pickle file.
     Args:

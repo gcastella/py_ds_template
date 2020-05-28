@@ -1,3 +1,3 @@
-from .utils import *
 from .read import *
+from .utils import *
 from .write import *
