@@ -11,16 +11,28 @@ class PreProcessTask(BaseTask):
         super(PreProcessTask, self).__init__("preprocess")
 
     def run(self):
-        data = self.load(file=self.input)
-        pp_data = self.preprocess(data)
-        self.write(data=pp_data, file=self.output)
+        data = self.load(**self.input["extracted_data"])
+        transformer = self.transformer(data)
+        pp_data = self.preprocess(data, transformer)
+        self.write(data=pp_data, **self.output["preprocessed_data"])
+        self.write(data=transformer, **self.output["transformer"])
 
-    def preprocess(self, data):
+    @staticmethod
+    def transformer(data):
         col_names = list(data.columns)
         variables = col_names[:-1]
 
         pca = PCA(1)
-        df_pca = pca.fit_transform(data[variables])
+        pca.fit(data[variables])
+
+        return pca
+
+    @staticmethod
+    def preprocess(data, transformer):
+        col_names = list(data.columns)
+        variables = col_names[:-1]
+
+        df_pca = transformer.transform(data[variables])
 
         df_pp = data.copy()
         df_pp["pca_comp1"] = df_pca[:, 0]

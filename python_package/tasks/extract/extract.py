@@ -13,19 +13,21 @@ class ExtractTask(BaseTask):
 
     def run(self):
         iris_df = self.extract()
-        self.write(data=iris_df, file=self.output)
+        self.write(data=iris_df, **self.output["extracted_data"])
 
-    def extract(self):
+    @staticmethod
+    def extract():
         iris = load_iris()
         columns = ["sepal_length", "sepal_width",
                    "petal_length", "petal_width",
                    "species"]
-        df = pd.concat([
-            pd.DataFrame(iris.data, columns=columns[:-1]),
-            pd.DataFrame(iris.target_names[iris.target], columns=columns[-1:]),
+        df = pd.concat(
+            [
+                pd.DataFrame(iris.data, columns=columns[:-1]),
+                pd.DataFrame(iris.target_names[iris.target],
+                             columns=columns[-1:]),
             ],
             axis=1
         )
-
         logger.info(f"Loaded Iris data set.")
         return df
