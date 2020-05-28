@@ -24,7 +24,8 @@ class ExtractTask(BaseTask):
         df = pd.concat(
             [
                 pd.DataFrame(iris.data, columns=columns[:-1]),
-                pd.DataFrame(iris.target_names[iris.target], columns=columns[-1:]),
+                pd.DataFrame(iris.target_names[iris.target],
+                             columns=columns[-1:]),
             ],
             axis=1
         )

@@ -2,7 +2,7 @@
 # RUN PARAMETERS
 ##########################################################
 run:
-    use_existing_run: "20200522_202539"  # Either False or the version string of the run to use.
+    use_existing_run: "20200528_185241"  # Either False or the version string of the run to use.
 
     path:
         extract: &extract "model_data/01_source"
@@ -45,7 +45,7 @@ task:
 # --------------------------------------------------------
 ## Parameters for the extract task
     extract:
-        ouptut:
+        output:
             extracted_data:
                 location:
                     path: *extract
@@ -180,7 +180,7 @@ task:
             predict_data:
                 location:
                     path: *extract
-                    file: "predict_sample.csv"
+                    file: "iris.csv"
                 loader:
                     module: *csv_loader_module
                     name: *csv_loader_name

@@ -1,8 +1,7 @@
 import logging
 import pandas as pd
 
-from python_package.config import config
-from python_package.utils import add_version, get_from_module
+from python_package.utils import get_from_module
 from python_package.tasks import BaseTask
 
 logger = logging.getLogger(__name__)

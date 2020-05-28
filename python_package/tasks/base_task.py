@@ -1,11 +1,20 @@
-import pandas as pd
 import logging
-from typing import Dict, Any, Callable
+from typing import Dict, Any, Callable, TypedDict
 
 from python_package.config import config
-from python_package.utils import add_version, get_from_module, func_def
+from python_package.utils import add_version, func_def
 
 logger = logging.getLogger(__name__)
+
+
+class Loader(TypedDict):
+    file: str
+    loader: Callable
+
+
+class Writer(TypedDict):
+    file: str
+    writer: Callable
 
 
 class BaseTask:
@@ -25,9 +34,8 @@ class BaseTask:
         self.input = self.prepare_loaders()
         self.output = self.prepare_writers()
 
-        # Logging
         logger.info(
-            f"Initiated {task_scope} task run with version {self.version}."
+            f"Initiated {self.scope} task run with version {self.version}."
         )
 
     @staticmethod
@@ -50,13 +58,13 @@ class BaseTask:
     def file_version(self, **location):
         """Returns the complete file path with the version."""
         return add_version(
-            file=location["name"],
+            file=location["file"],
             path=location["path"],
             version=self.version,
             end=False,
         )
 
-    def prepare_loaders(self) -> Dict[Dict[str, Callable]]:
+    def prepare_loaders(self) -> Dict[str, Loader]:
         """
         Returns a dictionary of all functions used to
         load inputs and the input files to use.
@@ -66,11 +74,11 @@ class BaseTask:
             for name, input in self.config.input.items():
                 loader = func_def(**input.loader)
                 file = self.file_version(**input.location)
-                loaders[name] = {"file": file, "loader": loader}
+                loaders[name] = Loader(file=file, loader=loader)
         logger.debug("Prepared loaders.")
         return loaders
 
-    def prepare_writers(self) -> Dict[Dict[str, Callable]]:
+    def prepare_writers(self) -> Dict[str, Writer]:
         """
         Returns a dictionary of all functions used to
         write outputs and the output files to use.
@@ -80,7 +88,7 @@ class BaseTask:
             for name, output in self.config.output.items():
                 writer = func_def(**output.writer)
                 file = self.file_version(**output.location)
-                writers[name] = {"file": file, "writer": writer}
+                writers[name] = Writer(file=file, writer=writer)
         logger.debug("Prepared writers.")
         return writers
 
