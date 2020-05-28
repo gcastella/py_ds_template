@@ -3,11 +3,14 @@ import logging
 import click
 
 from python_package.config import load_logging, config
-from python_package.tasks.sample_tasks import hello_world, get_config
+from python_package.tasks.sample_tasks import (
+    hello_world, get_config, start_version
+)
 from python_package.tasks.extract import ExtractTask
 from python_package.tasks.preprocess import PreProcessTask
 from python_package.tasks.train import TrainTask
 from python_package.tasks.test import TestTask
+from python_package.tasks.predict import PredictTask
 
 logger = logging.getLogger(__name__)
 
@@ -15,10 +18,12 @@ logger = logging.getLogger(__name__)
 tasks = {
     "sample_task": hello_world,
     "get_config": get_config,
+    "version": start_version,
     "extract": ExtractTask().run,
     "pre_process": PreProcessTask().run,
     "train": TrainTask().run,
     "test": TestTask().run,
+    "predict": PredictTask().run,
 }
 
 
