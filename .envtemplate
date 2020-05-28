@@ -1,0 +1,4 @@
+ENVIRONMENT=prod
+CONFIG_FILE=configs/config.yaml
+RUN_FILE=configs/run.yaml
+LOG_FILE=configs/logging.yaml

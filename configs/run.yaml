@@ -1,0 +1,213 @@
+##########################################################
+# RUN PARAMETERS
+##########################################################
+run:
+    use_existing_run: "20200528_185241"  # Either False or the version string of the run to use.
+
+    path:
+        extract: &extract "model_data/01_source"
+        preprocess: &preprocess "model_data/02_preprocess"
+        train: &train "model_data/03_train"
+        test: &test "model_data/04_test"
+        predict: &predict "model_data/05_predict"
+
+    loader:
+        csv:
+            module: &csv_loader_module "pandas"
+            name: &csv_loader_name "read_csv"
+        pickle:
+            module: &pickle_loader_module "python_package.utils"
+            name: &pickle_loader_name "read_pickle"
+        parquet:
+            module: &parquet_loader_module "pandas"
+            name: &parquet_loader_name "read_parquet"
+
+    writer:
+        csv:
+            module: &csv_writer_module "pandas"
+            name: &csv_writer_name "DataFrame.to_csv"
+        pickle:
+            module: &pickle_writer_module "python_package.utils"
+            name: &pickle_writer_name "save_pickle"
+        parquet:
+            module: &parquet_writer_module "pandas"
+            name: &parquet_writer_name "DataFrame.to_parquet"
+
+    versioning:  # Ignored if use_existing_run is not False.
+        module: "python_package.utils"
+        name: "get_time_str"
+
+##########################################################
+# TASK PARAMETERS
+##########################################################
+task:
+
+# --------------------------------------------------------
+## Parameters for the extract task
+    extract:
+        output:
+            extracted_data:
+                location:
+                    path: *extract
+                    file: &extract_output "iris.csv"
+                writer:
+                    module: *csv_writer_module
+                    name: *csv_writer_name
+                    params:
+                        index: False
+
+# --------------------------------------------------------
+## Parameters for the preprocess task
+    preprocess:
+        input:
+            extracted_data:
+                location:
+                    path: *extract
+                    file: *extract_output
+                loader:
+                    module: *csv_loader_module
+                    name: *csv_loader_name
+                    params:
+                        sep: ","
+        output:
+            preprocessed_data:
+                location:
+                    path: *preprocess
+                    file: &preprocess_output "pp_iris.parquet"
+                writer:
+                    module: *parquet_writer_module
+                    name: *parquet_writer_name
+                    params:
+                        index: False
+            transformer:
+                location:
+                    path: *preprocess
+                    file: &preprocess_pickle "preprocess.pickle"
+                writer:
+                    module: *pickle_writer_module
+                    name: *pickle_writer_name
+                    params: {}
+
+# --------------------------------------------------------
+## Parameters for the train task
+    train:
+        input:
+            data:
+                location:
+                    path: *preprocess
+                    file: *preprocess_output
+                loader:
+                    module: *parquet_loader_module
+                    name: *parquet_loader_name
+                    params: {}
+        pipeline:
+            target: "species"
+            split:
+                module: "sklearn.model_selection"
+                name: "train_test_split"
+                params:
+                    test_size: 0.33
+                    random_state: 42
+            model:
+                module: "sklearn.dummy"
+                name: "DummyClassifier"
+                params:
+                    strategy: "most_frequent"
+        output:
+            split:
+                location:
+                    path: *train
+                    file: &split_output "train_test.pkl"
+                writer:
+                    module: *pickle_writer_module
+                    name: *pickle_writer_name
+                    params: {}
+            model:
+                location:
+                    path: *train
+                    file: &model_output "model.pkl"
+                writer:
+                    module: *pickle_writer_module
+                    name: *pickle_writer_name
+                    params: {}
+
+# --------------------------------------------------------
+## Parameters for the test task
+    test:
+        input:
+            split:
+                location:
+                    path: *train
+                    file: *split_output
+                loader:
+                    module: *pickle_loader_module
+                    name: *pickle_loader_name
+                    params: {}
+            model:
+                location:
+                    path: *train
+                    file: *model_output
+                loader:
+                    module: *pickle_loader_module
+                    name: *pickle_loader_name
+                    params: {}
+        metrics:
+            f1:
+                module: "sklearn.metrics"
+                name: "f1_score"
+                params:
+                    average: "micro"
+            accuracy:
+                module: "sklearn.metrics"
+                name: "accuracy_score"
+                params: {}
+        output:
+            metrics:
+                location:
+                    path: *test
+                    file: "test.csv"
+                writer:
+                    module: *csv_writer_module
+                    name: *csv_writer_name
+                    params:
+                        sep: ","
+                        index: False
+
+# --------------------------------------------------------
+## Parameters for the predict task
+    predict:
+        input:
+            predict_data:
+                location:
+                    path: *extract
+                    file: "iris.csv"
+                loader:
+                    module: *csv_loader_module
+                    name: *csv_loader_name
+                    params:
+                        sep: ","
+            model:
+                location:
+                    path: *train
+                    file: *model_output
+                loader:
+                    module: *pickle_loader_module
+                    name: *pickle_loader_name
+            preprocess:
+                location:
+                    path: *preprocess
+                    file: *preprocess_pickle
+                loader:
+                    module: *pickle_loader_module
+                    name: *pickle_loader_name
+        output:
+            predictions:
+                location:
+                    path: *predict
+                    file: &predict_output "predict.csv"
+                writer:
+                    module: *csv_writer_module
+                    name: *csv_writer_name
+                    params:
+                        sep: ","
+                        index: False
