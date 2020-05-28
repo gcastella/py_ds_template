@@ -1,9 +1,9 @@
 import pandas as pd
 import logging
-import typing
+from typing import Dict, Any, Callable
 
 from python_package.config import config
-from python_package.utils import add_version, get_from_module
+from python_package.utils import add_version, get_from_module, func_def
 
 logger = logging.getLogger(__name__)
 
@@ -20,59 +20,73 @@ class BaseTask:
         # Reading relevant config
         self.scope = task_scope
         self.version = config.run.version
-        self.task_config = config.task[task_scope]
-        self.loader = config.task[task_scope].loader
-        self.writer = config.task[task_scope].writer
-        if config.task[task_scope].input:
-            self.input = add_version(
-                **config.task[task_scope].input,
-                version=self.version,
-                end=False
-            )
-        else:
-            self.input = ""
-            logger.info("No input file found in config.")
-        if config.task[task_scope].output:
-            self.output = add_version(
-                **config.task[task_scope].output,
-                version=self.version,
-                end=False
-            )
-        else:
-            self.output = ""
-            logger.info("No output file found in config.")
+        self.config = config.task[task_scope]
+
+        self.input = self.prepare_loaders()
+        self.output = self.prepare_writers()
 
         # Logging
         logger.info(
             f"Initiated {task_scope} task run with version {self.version}."
         )
 
+    @staticmethod
+    def load(file: str, loader: Callable) -> Any:
+        """Load data from files to return a data frame"""
+        data = loader(file)
+        logger.info(f"Loaded data from {file}.")
+        return data
+
+    @staticmethod
+    def write(data: Any, file: str, writer: Callable) -> None:
+        """Write data frame or model object to a file."""
+        writer(data, file)
+        logger.info(f"Saved data in {file}.")
+
+    def get_scope(self) -> str:
+        """Get scope of a task"""
+        return self.scope
+
+    def file_version(self, **location):
+        """Returns the complete file path with the version."""
+        return add_version(
+            file=location["name"],
+            path=location["path"],
+            version=self.version,
+            end=False,
+        )
+
+    def prepare_loaders(self) -> Dict[Dict[str, Callable]]:
+        """
+        Returns a dictionary of all functions used to
+        load inputs and the input files to use.
+        """
+        loaders = dict()
+        if self.config.input:
+            for name, input in self.config.input.items():
+                loader = func_def(**input.loader)
+                file = self.file_version(**input.location)
+                loaders[name] = {"file": file, "loader": loader}
+        logger.debug("Prepared loaders.")
+        return loaders
+
+    def prepare_writers(self) -> Dict[Dict[str, Callable]]:
+        """
+        Returns a dictionary of all functions used to
+        write outputs and the output files to use.
+        """
+        writers = dict()
+        if self.config.output:
+            for name, output in self.config.output.items():
+                writer = func_def(**output.writer)
+                file = self.file_version(**output.location)
+                writers[name] = {"file": file, "writer": writer}
+        logger.debug("Prepared writers.")
+        return writers
+
     def run(self) -> None:
         """
         Actually runs all the task, usually load, do something,
         write back results.
         """
-        pass
-
-    def load(self, file: str) -> typing.Any:
-        """
-        Load data from files to return a data frame
-        """
-        loader = get_from_module(self.loader.module, self.loader.name)
-        data = loader(file, **self.loader.params)
-        logger.info(f"Loaded data from {file}.")
-        return data
-
-    def write(self, data: typing.Any, file: str) -> None:
-        """
-        Write data frame or model object.
-        """
-        writer = get_from_module(self.writer.module, self.writer.name)
-        writer(data, file, **self.writer.params)
-        logger.info(f"Saved data in {file}.")
-
-    def get_scope(self) -> str:
-        """
-        Get scope of a task
-        """
-        return self.scope
+        logger.info("Replace 'run' method when inheriting from 'BaseTask'.")
