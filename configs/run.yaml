@@ -16,7 +16,7 @@ run:
             module: &csv_loader_module "pandas"
             name: &csv_loader_name "read_csv"
         pickle:
-            module: &pickle_loader_module "python_package.utils"
+            module: &pickle_loader_module "dsmodule.utils"
             name: &pickle_loader_name "read_pickle"
         parquet:
             module: &parquet_loader_module "pandas"
@@ -27,14 +27,14 @@ run:
             module: &csv_writer_module "pandas"
             name: &csv_writer_name "DataFrame.to_csv"
         pickle:
-            module: &pickle_writer_module "python_package.utils"
+            module: &pickle_writer_module "dsmodule.utils"
             name: &pickle_writer_name "save_pickle"
         parquet:
             module: &parquet_writer_module "pandas"
             name: &parquet_writer_name "DataFrame.to_parquet"
 
     versioning:  # Ignored if use_existing_run is not False.
-        module: "python_package.utils"
+        module: "dsmodule.utils"
         name: "get_time_str"
 
 ##########################################################

@@ -1,7 +1,7 @@
 import logging
 
-from python_package.config import config
-from python_package.utils import get_from_module
+from dsmodule.config import config
+from dsmodule.utils import get_from_module
 
 logger = logging.getLogger(__name__)
 

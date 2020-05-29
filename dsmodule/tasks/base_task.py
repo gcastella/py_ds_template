@@ -1,8 +1,8 @@
 import logging
 from typing import Dict, Any, Callable, TypedDict
 
-from python_package.config import config
-from python_package.utils import add_version, func_def
+from dsmodule.config import config
+from dsmodule.utils import add_version, func_def
 
 logger = logging.getLogger(__name__)
 

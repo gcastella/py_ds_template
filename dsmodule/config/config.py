@@ -4,7 +4,7 @@ import yaml
 from box import Box
 from dotenv import load_dotenv
 
-from python_package.utils import get_from_module
+from dsmodule.utils import get_from_module
 
 
 def box_yaml(file: str) -> Box:

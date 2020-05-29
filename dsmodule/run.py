@@ -2,15 +2,15 @@ import logging
 
 import click
 
-from python_package.config import load_logging, config
-from python_package.tasks.sample_tasks import (
+from dsmodule.config import load_logging, config
+from dsmodule.tasks.sample_tasks import (
     hello_world, get_config, start_version
 )
-from python_package.tasks.extract import ExtractTask
-from python_package.tasks.preprocess import PreProcessTask
-from python_package.tasks.train import TrainTask
-from python_package.tasks.test import TestTask
-from python_package.tasks.predict import PredictTask
+from dsmodule.tasks.extract import ExtractTask
+from dsmodule.tasks.preprocess import PreProcessTask
+from dsmodule.tasks.train import TrainTask
+from dsmodule.tasks.test import TestTask
+from dsmodule.tasks.predict import PredictTask
 
 logger = logging.getLogger(__name__)
 
