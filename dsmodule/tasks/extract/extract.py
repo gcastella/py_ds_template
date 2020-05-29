@@ -1,4 +1,4 @@
-from python_package.tasks import BaseTask
+from dsmodule.tasks import BaseTask
 
 import pandas as pd
 import logging

@@ -1,6 +1,6 @@
 import unittest
 
-from python_package.config import *
+from dsmodule.config import *
 
 
 class TestConfig(unittest.TestCase):

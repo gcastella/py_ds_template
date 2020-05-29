@@ -3,7 +3,7 @@ import os
 
 import yaml
 
-from python_package.config import config
+from dsmodule.config import config
 
 
 def load_logging(yaml_file=config.log_file, logs_dir=config.path.logs):
