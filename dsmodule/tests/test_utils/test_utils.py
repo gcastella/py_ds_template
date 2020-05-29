@@ -1,7 +1,7 @@
 import re
 import unittest
 
-from python_package.utils import *
+from dsmodule.utils import *
 
 
 class TestUtils(unittest.TestCase):

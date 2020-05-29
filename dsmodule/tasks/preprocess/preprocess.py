@@ -1,7 +1,7 @@
 import logging
 from sklearn.decomposition import PCA
 
-from python_package.tasks import BaseTask
+from dsmodule.tasks import BaseTask
 
 logger = logging.getLogger(__name__)
 

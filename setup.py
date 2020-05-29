@@ -5,7 +5,7 @@ with open("requirements.txt") as f:
     requirements = f.read().splitlines()
 
 setup(
-    name='python_package',
+    name='dsmodule',
     packages=find_packages(),
     install_requires=requirements,
     include_package_data=True,

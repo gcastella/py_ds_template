@@ -1,8 +1,8 @@
 import logging
 import pandas as pd
 
-from python_package.utils import get_from_module
-from python_package.tasks import BaseTask
+from dsmodule.utils import get_from_module
+from dsmodule.tasks import BaseTask
 
 logger = logging.getLogger(__name__)
 
