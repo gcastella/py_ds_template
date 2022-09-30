@@ -3,7 +3,7 @@ click==7.1.2
 DateTime==4.3
 gitdb==4.0.5
 GitPython==3.1.2
-joblib==0.15.1
+joblib==1.2.0
 linecache2==1.0.0
 llvmlite==0.32.1
 numba==0.49.1
